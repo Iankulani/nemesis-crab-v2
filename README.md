@@ -1,6 +1,10 @@
 # nemesis-crab-v2
 
 
+<img width="360" height="360" alt="e5236747-c97b-419b-8205-f32866c5e0d4" src="https://github.com/user-attachments/assets/107ab38a-e565-49c3-b492-d2796b88fdf1" />
+
+
+
 
 
 
