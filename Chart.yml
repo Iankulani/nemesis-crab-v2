@@ -1,0 +1,18 @@
+apiVersion: v2
+name: nemesis-crab-v2
+description: Ultimate Cybersecurity Command & Control Platform
+type: application
+version: 2.0.0
+appVersion: "2.0.0"
+keywords:
+  - cybersecurity
+  - pentesting
+  - redteam
+  - c2
+home: https://github.com/your-org/nemesis-crab-v2
+sources:
+  - https://github.com/your-org/nemesis-crab-v2
+maintainers:
+  - name: Ian Carter Kulani
+    email: ian@example.com
+icon: https://example.com/nemesis-icon.png

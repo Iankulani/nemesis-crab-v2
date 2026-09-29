@@ -1,0 +1,25 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: nemesis-ingress
+  namespace: nemesis-crab
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+spec:
+  ingressClassName: nginx
+  tls:
+    - hosts: [nemesis.example.com]
+      secretName: nemesis-tls
+  rules:
+    - host: nemesis.example.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: nemesis-web
+                port:
+                  number: 5000

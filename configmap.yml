@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nemesis-config
+  namespace: nemesis-crab
+data:
+  NEMESIS_MODE: "production"
+  NEMESIS_WEB_PORT: "5000"
+  NEMESIS_AGENT_PORT: "5555"
+  NEMESIS_C2_PORT: "4444"
+  LOG_LEVEL: "INFO"
+  TZ: "UTC"
+  config.json: |
+    {
+      "version": "2.0.0",
+      "web": { "enabled": true, "port": 5000, "host": "0.0.0.0" },
+      "monitoring": { "enabled": true },
+      "traffic_generation": { "enabled": true, "max_packet_rate": 1000 },
+      "dos": { "enabled": true, "max_threads": 100 }
+    }

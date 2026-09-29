@@ -1,0 +1,85 @@
+# ============================================================
+# NEMESIS-CRAB-V2 - Production Override
+# Usage: docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d
+# ============================================================
+version: "3.9"
+
+services:
+
+  nemesis-crab:
+    image: registry.gitlab.com/your-org/nemesis-crab-v2:${IMAGE_TAG:-latest}
+    build: null    # use pre-built image only
+    restart: always
+    read_only: false
+    security_opt:
+      - no-new-privileges:false
+      - apparmor:docker-default
+    environment:
+      NEMESIS_MODE: production
+      LOG_LEVEL: INFO
+    deploy:
+      mode: replicated
+      replicas: 1
+      restart_policy:
+        condition: any
+        delay: 10s
+        max_attempts: 5
+        window: 120s
+      update_config:
+        parallelism: 1
+        delay: 30s
+        failure_action: rollback
+        order: stop-first
+      rollback_config:
+        parallelism: 1
+        order: stop-first
+      resources:
+        limits:
+          cpus: "4.0"
+          memory: 4G
+        reservations:
+          cpus: "1.0"
+          memory: 1G
+
+  redis:
+    command: >
+      redis-server
+      --appendonly yes
+      --maxmemory 1gb
+      --maxmemory-policy allkeys-lru
+      --requirepass ${REDIS_PASSWORD}
+      --save 900 1
+      --save 300 10
+    deploy:
+      resources:
+        limits:
+          cpus: "1.0"
+          memory: 1G
+
+  postgres:
+    environment:
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    deploy:
+      resources:
+        limits:
+          cpus: "2.0"
+          memory: 2G
+
+  nginx:
+    ports:
+      - "80:80"
+      - "443:443"
+
+  prometheus:
+    deploy:
+      resources:
+        limits:
+          cpus: "1.0"
+          memory: 1G
+
+  grafana:
+    deploy:
+      resources:
+        limits:
+          cpus: "1.0"
+          memory: 512M

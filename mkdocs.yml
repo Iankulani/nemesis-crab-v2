@@ -1,0 +1,74 @@
+site_name: NEMESIS-CRAB-V2
+site_description: Ultimate Cybersecurity Command & Control Platform
+site_author: Ian Carter Kulani
+site_url: https://docs.nemesis.example.com
+repo_url: https://github.com/your-org/nemesis-crab-v2
+repo_name: nemesis-crab-v2
+edit_uri: edit/main/docs/
+
+theme:
+  name: material
+  language: en
+  palette:
+    - scheme: slate
+      primary: deep purple
+      accent: orange
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+    - scheme: default
+      primary: deep purple
+      accent: orange
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - navigation.expand
+    - navigation.top
+    - search.suggest
+    - search.highlight
+    - content.code.copy
+    - content.tabs.link
+
+nav:
+  - Home: index.md
+  - Getting Started:
+      - Installation: getting-started/installation.md
+      - Docker: getting-started/docker.md
+      - Configuration: getting-started/configuration.md
+  - Commands:
+      - Overview: commands/index.md
+      - Ping: commands/ping.md
+      - Traceroute: commands/traceroute.md
+      - Curl: commands/curl.md
+      - Wget: commands/wget.md
+      - Nmap: commands/nmap.md
+  - Modules:
+      - Keylogger: modules/keylogger.md
+      - Phishing: modules/phishing.md
+      - DoS: modules/dos.md
+      - Cracking: modules/cracking.md
+      - Reverse Engineering: modules/reverse.md
+  - Deployment:
+      - Kubernetes: deployment/kubernetes.md
+      - Helm: deployment/helm.md
+      - Ansible: deployment/ansible.md
+  - API: api.md
+  - FAQ: faq.md
+  - Legal: legal.md
+
+plugins:
+  - search
+  - git-revision-date-localized
+
+markdown_extensions:
+  - admonition
+  - codehilite
+  - pymdownx.details
+  - pymdownx.superfences
+  - pymdownx.tabbed
+  - pymdownx.highlight
+  - toc:
+      permalink: true

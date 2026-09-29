@@ -1,0 +1,41 @@
+# ============================================================
+# NEMESIS-CRAB-V2 - Development Override
+# Usage: docker compose -f docker-compose.yml -f docker-compose.dev.yml up
+# ============================================================
+version: "3.9"
+
+services:
+
+  nemesis-crab:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    image: nemesis-crab-v2:dev
+    container_name: nemesis-crab-dev
+    environment:
+      NEMESIS_MODE: development
+      FLASK_DEBUG: "1"
+      FLASK_ENV: development
+      LOG_LEVEL: DEBUG
+    volumes:
+      # Mount source for hot-reload
+      - ./nemesis_crab_v2.py:/app/nemesis_crab_v2.py:ro
+      - ./health.py:/app/health.py:ro
+      - ./requirements.txt:/app/requirements.txt:ro
+      - ./nemesis_reports:/app/nemesis_reports
+      - nemesis-data:/app/.nemesis_crab_v2
+    ports:
+      - "5000:5000"
+      - "5555:5555"
+      - "4444:4444"
+      - "8080:8080"
+    command: ["watchmedo", "auto-restart", "--patterns=*.py", "--recursive",
+              "--", "python3", "-u", "/app/nemesis_crab_v2.py"]
+
+  redis:
+    ports:
+      - "6379:6379"
+
+  postgres:
+    ports:
+      - "5432:5432"

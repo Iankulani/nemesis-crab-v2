@@ -1,0 +1,79 @@
+# ============================================================
+# NEMESIS-CRAB-V2 - Ansible Deployment Playbook
+# ============================================================
+---
+- name: Deploy NEMESIS-CRAB-V2 on Alpine/Debian hosts
+  hosts: nemesis_servers
+  become: true
+  vars:
+    app_dir: /opt/nemesis-crab
+    app_version: "2.0.0"
+    registry: registry.gitlab.com
+    image: "{{ registry }}/your-org/nemesis-crab-v2:{{ app_version }}"
+
+  tasks:
+    - name: Install base packages (Alpine)
+      community.general.apk:
+        name:
+          - docker
+          - docker-compose
+          - git
+          - curl
+          - python3
+          - py3-pip
+        state: present
+      when: ansible_os_family == "Alpine"
+
+    - name: Install base packages (Debian)
+      apt:
+        name:
+          - docker.io
+          - docker-compose-plugin
+          - git
+          - curl
+        state: present
+      when: ansible_os_family == "Debian"
+
+    - name: Enable and start Docker
+      service:
+        name: docker
+        state: started
+        enabled: true
+
+    - name: Create app directory
+      file:
+        path: "{{ app_dir }}"
+        state: directory
+        mode: "0755"
+
+    - name: Copy docker-compose file
+      copy:
+        src: ../docker-compose.yml
+        dest: "{{ app_dir }}/docker-compose.yml"
+        mode: "0644"
+
+    - name: Copy env file
+      template:
+        src: env.j2
+        dest: "{{ app_dir }}/.env"
+        mode: "0600"
+
+    - name: Pull image
+      community.docker.docker_image:
+        name: "{{ image }}"
+        source: pull
+
+    - name: Start stack
+      community.docker.docker_compose:
+        project_src: "{{ app_dir }}"
+        state: present
+        restarted: false
+
+    - name: Wait for health endpoint
+      uri:
+        url: "http://localhost:5000/healthz"
+        status_code: 200
+      retries: 10
+      delay: 5
+      register: result
+      until: result.status == 200

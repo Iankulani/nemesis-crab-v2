@@ -1,0 +1,100 @@
+# ============================================================
+# NEMESIS-CRAB-V2 - Helm Values
+# ============================================================
+replicaCount: 1
+
+image:
+  repository: registry.gitlab.com/your-org/nemesis-crab-v2
+  pullPolicy: Always
+  tag: "2.0.0"
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  create: true
+  annotations: {}
+  name: ""
+
+podAnnotations: {}
+podSecurityContext:
+  privileged: true
+
+securityContext:
+  capabilities:
+    add: ["NET_ADMIN", "NET_RAW", "SYS_ADMIN"]
+  readOnlyRootFilesystem: false
+  runAsNonRoot: false
+
+service:
+  type: ClusterIP
+  ports:
+    web: 5000
+    agent: 5555
+    c2: 4444
+    phishing: 8080
+
+ingress:
+  enabled: true
+  className: nginx
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+  hosts:
+    - host: nemesis.example.com
+      paths:
+        - path: /
+          pathType: Prefix
+  tls:
+    - secretName: nemesis-tls
+      hosts:
+        - nemesis.example.com
+
+resources:
+  limits:
+    cpu: 2000m
+    memory: 2Gi
+  requests:
+    cpu: 500m
+    memory: 512Mi
+
+autoscaling:
+  enabled: true
+  minReplicas: 1
+  maxReplicas: 3
+  targetCPUUtilizationPercentage: 75
+  targetMemoryUtilizationPercentage: 80
+
+persistence:
+  enabled: true
+  data:
+    size: 10Gi
+    storageClass: standard
+  reports:
+    size: 5Gi
+    storageClass: standard
+
+redis:
+  enabled: true
+  auth:
+    password: nemesis_redis_pass
+
+postgresql:
+  enabled: true
+  auth:
+    database: nemesis
+    username: nemesis
+    password: nemesis_pg_pass
+
+monitoring:
+  prometheus:
+    enabled: true
+  grafana:
+    enabled: true
+
+nodeSelector:
+  kubernetes.io/os: linux
+
+tolerations: []
+
+affinity: {}

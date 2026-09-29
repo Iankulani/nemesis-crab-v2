@@ -1,0 +1,75 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nemesis-crab
+  namespace: nemesis-crab
+  labels:
+    app: nemesis-crab
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: nemesis-crab
+  template:
+    metadata:
+      labels:
+        app: nemesis-crab
+    spec:
+      hostNetwork: true
+      dnsPolicy: ClusterFirstWithHostNet
+      containers:
+        - name: nemesis-crab
+          image: registry.gitlab.com/your-org/nemesis-crab-v2:latest
+          imagePullPolicy: Always
+          securityContext:
+            privileged: true
+            capabilities:
+              add: ["NET_ADMIN", "NET_RAW", "SYS_ADMIN"]
+          envFrom:
+            - configMapRef:
+                name: nemesis-config
+            - secretRef:
+                name: nemesis-secrets
+          ports:
+            - { name: web,       containerPort: 5000 }
+            - { name: agent,     containerPort: 5555 }
+            - { name: c2,        containerPort: 4444 }
+            - { name: phishing,  containerPort: 8080 }
+          volumeMounts:
+            - { name: data,     mountPath: /app/.nemesis_crab_v2 }
+            - { name: reports,  mountPath: /app/nemesis_reports }
+            - { name: docker-sock, mountPath: /var/run/docker.sock }
+          resources:
+            requests:
+              cpu: "500m"
+              memory: "512Mi"
+            limits:
+              cpu: "2"
+              memory: "2Gi"
+          livenessProbe:
+            exec:
+              command: ["python3", "/app/health.py", "--json", "--exit-code"]
+            initialDelaySeconds: 30
+            periodSeconds: 30
+            timeoutSeconds: 10
+            failureThreshold: 3
+          readinessProbe:
+            exec:
+              command: ["python3", "/app/health.py", "--json", "--exit-code"]
+            initialDelaySeconds: 10
+            periodSeconds: 15
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: nemesis-data-pvc
+        - name: reports
+          persistentVolumeClaim:
+            claimName: nemesis-reports-pvc
+        - name: docker-sock
+          hostPath:
+            path: /var/run/docker.sock
+            type: Socket
+      nodeSelector:
+        kubernetes.io/os: linux

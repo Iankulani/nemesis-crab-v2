@@ -1,0 +1,61 @@
+# ============================================================
+# NEMESIS-CRAB-V2 - Renovate dependency automation
+# ============================================================
+extends:
+  - config:recommended
+  - :semanticCommits
+  - :dependencyDashboard
+
+schedule:
+  - "before 6am on monday"
+
+labels:
+  - dependencies
+  - automated
+
+prConcurrentLimit: 5
+prHourlyLimit: 3
+rangeStrategy: bump
+
+packageRules:
+  # Group Python deps
+  - matchManagers: [pip_requirements]
+    groupName: "Python dependencies"
+    groupSlug: python-deps
+    separateMajorMinor: false
+    automerge: false
+
+  # Group Docker base images
+  - matchDatasources: [docker]
+    matchPackageNames: ["alpine"]
+    groupName: "Alpine base image"
+    automerge: true
+
+  # Group Alpine package updates (apk)
+  - matchManagers: [dockerfile]
+    matchPackagePatterns: ["*"]
+    groupName: "Dockerfile deps"
+
+  # Group GitHub Actions
+  - matchManagers: [github-actions]
+    groupName: "GitHub Actions"
+    automerge: true
+
+  # Group Helm
+  - matchManagers: [helmv3]
+    groupName: "Helm dependencies"
+
+  # Group K8s
+  - matchManagers: [kubernetes]
+    groupName: "Kubernetes manifests"
+
+  # Security updates always
+  - matchUpdateTypes: [patch, pin]
+    matchCurrentVersion: "!/^0/"
+    automerge: true
+
+vulnerabilityAlerts:
+  enabled: true
+  labels:
+    - security
+    - urgent

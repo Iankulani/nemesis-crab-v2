@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: nemesis-web
+  namespace: nemesis-crab
+  labels:
+    app: nemesis-crab
+spec:
+  type: ClusterIP
+  selector:
+    app: nemesis-crab
+  ports:
+    - { name: web,      port: 5000, targetPort: 5000 }
+    - { name: agent,    port: 5555, targetPort: 5555 }
+    - { name: c2,       port: 4444, targetPort: 4444 }
+    - { name: phishing, port: 8080, targetPort: 8080 }
