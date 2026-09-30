@@ -1,6 +1,6 @@
 # nemesis-crab-v2
 
-
+<div align="center">
 <img width="360" height="360" alt="e5236747-c97b-419b-8205-f32866c5e0d4" src="https://github.com/user-attachments/assets/107ab38a-e565-49c3-b492-d2796b88fdf1" />
 
 
@@ -17,6 +17,8 @@
 [![Platform](https://img.shields.io/badge/platform-Linux%20%7C%20Windows%20%7C%20macOS-blue?style=for-the-badge&logo=linux&logoColor=white)](https://github.com/Iankulani/nemesis-crab-v2)
 [![Python](https://img.shields.io/badge/python-3.x-blue?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/)
 
+
+</div>
 
 Nemesis Crab is a cybersecurity monitoring and cyber drill tool designed to support authorized security professionals, white-hat hackers, cybersecurity researchers, and defensive security teams in monitoring cybersecurity threats and conducting controlled security simulations. The tool provides a centralized command interface that allows authorized users to interact with security-monitoring functions through multiple communication platforms and a web application.
 
