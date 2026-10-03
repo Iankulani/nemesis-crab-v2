@@ -5,9 +5,6 @@
 
 
 
-
-
-
 [![GitHub stars](https://img.shields.io/github/stars/Iankulani/nemesis-crab-v2?style=for-the-badge&logo=github)](https://github.com/Iankulani/nemesis-crab-v2/stargazers)
 [![GitHub forks](https://img.shields.io/github/forks/Iankulani/nemesis-crab-v2?style=for-the-badge&logo=github)](https://github.com/Iankulani/nemesis-crab-v2/network)
 [![GitHub watchers](https://img.shields.io/github/watchers/Iankulani/nemesis-crab-v2?style=for-the-badge&logo=github)](https://github.com/Iankulani/nemesis-crab-v2/watchers)
